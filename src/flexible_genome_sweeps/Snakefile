@@ -90,7 +90,6 @@ rule run_mmseqs:
         "proc/{organism}/%s.concatenated_orfs.faa" % config['Group_to_cluster']
     output:
         mmseqs_db = "proc/{organism}/clusters/DB.%s" % config['Group_to_cluster'],
-        clusters = "proc/{organism}/clusters/clu.%s" % config['Group_to_cluster']
     threads:
         int(config['num_threads'])
     shell:
@@ -98,17 +97,16 @@ rule run_mmseqs:
         mkdir -p ./tmp/tmp_{wildcards.organism}/mmseqs;
         rm -rf ./tmp/tmp_{wildcards.organism}/mmseqs/*;
         {config[mmseqs_path]} createdb {input} {output.mmseqs_db};
-        {config[mmseqs_path]} cluster {output.mmseqs_db} {output.clusters} ./tmp/tmp_{wildcards.organism}/mmseqs --min-seq-id 0.50 --max-seqs 100000 -c 0.8;
+        {config[mmseqs_path]} cluster {output.mmseqs_db} ./proc/sulfolobus/clusters/clu.0 ./tmp/tmp_{wildcards.organism}/mmseqs --min-seq-id 0.50 --max-seqs 100000 -c 0.8;
         """
 
 rule clusters_to_tsv:
     input:
         mmseqs_db = "proc/{organism}/clusters/DB.%s" % config['Group_to_cluster'],
-        clusters = "proc/{organism}/clusters/clu.%s" % config['Group_to_cluster']
     output:
         clusters = "proc/{organism}/clusters/clusters.%s.tsv" % config['Group_to_cluster']
     shell:
-        "{config[mmseqs_path]} createtsv {input.mmseqs_db} {input.mmseqs_db} {input.clusters} {output}"
+        "{config[mmseqs_path]} createtsv {input.mmseqs_db} {input.mmseqs_db} ./proc/sulfolobus/clusters/clu.0 {output}"
 
 rule cluster_tsv_to_tidy:
     input:
@@ -194,7 +192,7 @@ rule align_core_genes:
                     for orf, strain in zip(df.orf_seq, df.strain):
                         outfile.write('>' + strain + '\n' + orf + '\n')
 
-                system('%s -in %s -out %s -quiet'%(config['muscle_path'], outputfilename, aligned))
+                system('%s -align %s -output %s -quiet'%(config['muscle_path'], outputfilename, aligned))
 
                 for s in SeqIO.parse(aligned, 'fasta'):
                     seqs[s.id] += str(s.seq)
@@ -247,7 +245,7 @@ rule get_flex_genes:
                     with open('proc/unaligned.fasta', 'w') as outfile:
                         for orf, strain in zip(df.orf_seq, df.strain):
                             outfile.write('>' + strain + '\n' + orf + '\n')
-                    system('%s -in %s -out %s -quiet'%(config['muscle_path'], 'proc/unaligned.fasta', 'proc/aligned.fasta'))
+                    system('%s -align %s -output %s -quiet'%(config['muscle_path'], 'proc/unaligned.fasta', 'proc/aligned.fasta'))
                     seqs = [str(seq.seq) for seq in SeqIO.parse('proc/aligned.fasta', 'fasta')]
                     recent, obs_pi = is_recent(seqs, config['alpha'], pi)
                     if recent:

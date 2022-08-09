@@ -3,14 +3,14 @@ genome_dir:
 base_name:
     "sulfolobus"
 num_threads:
-    "8"
+    "36"
 Group_to_cluster:
     "0"
 alpha:
     0.05
 prodigal_path:
-    "/home/parevalo/apps/bin/prodigal-2.6.3"
+    "/usr/bin/prodigal"
 mmseqs_path:
-    "/home/josephe/mmseqs2/bin/mmseqs"
+    "$HOME/miniconda3/envs/PopCOGenT/bin/mmseqs"
 muscle_path:
     "muscle"

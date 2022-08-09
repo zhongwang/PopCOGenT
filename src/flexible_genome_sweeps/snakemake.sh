@@ -1,4 +1,4 @@
 #!/bin/bash
 
 source activate PopCOGenT
-snakemake
+snakemake --latency-wait 30

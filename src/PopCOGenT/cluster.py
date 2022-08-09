@@ -104,7 +104,7 @@ def main():
                 outfile.writelines(new_lines)
 
             # Runs infomap
-            cmd = '{infomap} -i pajek {infomap_args} {pajek_file} infomap_out/'.format(infomap=infomap_path,
+            cmd = '{infomap} {infomap_args} {pajek_file} infomap_out/'.format(infomap=infomap_path,
                                                                                        pajek_file=outname,
                                                                                        infomap_args=infomap_args)
             os.system(cmd)

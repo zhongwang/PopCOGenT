@@ -191,7 +191,7 @@ Rscript_file = open(project_dir+Rscript_filename,"w")
 Rscript_lines = 'setwd("'+input_dir+'")\n'
 Rscript_lines += 'library("ape")\n'
 #Make dictionary of strain to populations/groups
-pop_infile = open(project_dir+pop_infile_name,"r")
+pop_infile = open(pop_infile_name,"r")
 focus_strain_list = []
 other_strain_list = []
 for line in pop_infile:

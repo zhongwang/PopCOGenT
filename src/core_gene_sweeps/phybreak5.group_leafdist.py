@@ -141,7 +141,7 @@ def dict_to_fasta(seq_dict_in):
 #############   MAIN   #############
 
 ##Make dictionary of strain to populations/groups
-pop_infile = open(project_dir+pop_infile_name,"r")
+pop_infile = open(pop_infile_name,"r")
 pop_dict = {}
 pop_list = []
 for line in pop_infile:
